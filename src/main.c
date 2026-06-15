@@ -8,6 +8,8 @@ int main(void)
   uint32_t      *buf;
   int           running;
   t_player      player;
+  Uint32        last_time;
+
 
   init_player(&player);
 
@@ -26,10 +28,18 @@ int main(void)
   tex = SDL_CreateTexture(rend, SDL_PIXELFORMAT_RGBA8888,
       SDL_TEXTUREACCESS_STREAMING, SCREEN_W, SCREEN_H);
 
+  last_time = SDL_GetTicks();
+
   running = 1;
   while (running)
   {
+    Uint32 now = SDL_GetTicks();
+    float dt = (now - last_time) / 1000.0f;
+    last_time = now;
+
     running = handle_events();
+    handle_input(&player, dt);
+
 
     clear_buffer(buf, SCREEN_W, SCREEN_H, 0x222222FF);
     draw_minimap(buf);
